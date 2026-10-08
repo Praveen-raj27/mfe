@@ -1,31 +1,115 @@
-import { lazy, Suspense, useState, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
-const ProductApp = lazy(() => import("products/ProductApp"));
-const ReviewApp = lazy(() => import("reviews/ReviewApp"));
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
-function App() {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+const ProductApp = React.lazy(() => import("products/ProductApp"));
+const CartApp = React.lazy(() => import("cart/CartApp"));
+const OrdersApp = React.lazy(() => import("orders/OrdersApp"));
 
+function Header() {
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const handleCartUpdated = (event) => {
+      console.log("HOST received cart:", event.detail);
+
+      const count = event.detail.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+
+      setCartCount(count);
+    };
+
+    window.addEventListener("cart:updated", handleCartUpdated);
+
+    return () => {
+      window.removeEventListener("cart:updated", handleCartUpdated);
+    };
+  }, []);
 
   return (
-    <div>
-      <h1>Host Application</h1>
+    <header className="header">
+      <h2>E-Commerce</h2>
 
-      <Suspense fallback={<div>Loading Products...</div>}>
-        <ProductApp
-          onProductSelect={setSelectedProduct}
-        />
-      </Suspense>
+      <nav>
+        <Link to="/">Products</Link>
 
-      <hr />
+        <Link to="/cart">
+          Cart ({cartCount})
+        </Link>
 
-      <Suspense fallback={<div>Loading Reviews...</div>}>
-        <ReviewApp
-          product={selectedProduct}
-        />
-      </Suspense>
+        <Link to="/orders">
+          Orders
+        </Link>
+      </nav>
+    </header>
+  );
+}
+
+function CartMFE() {
+  const location = useLocation();
+
+  console.log("CartMFE path:", location.pathname);
+
+  return (
+    <div
+      style={{
+        display: location.pathname === "/cart" ? "block" : "none",
+      }}
+    >
+      <CartApp />
     </div>
   );
 }
 
-export default App;
+function OrdersMFE() {
+  const location = useLocation();
+
+  console.log("OrdersMFE path:", location.pathname);
+
+  return (
+    <div
+      style={{
+        display: location.pathname === "/orders" ? "block" : "none",
+      }}
+    >
+      <OrdersApp />
+    </div>
+  );
+}
+
+function Loading() {
+  return <div style={{ padding: 30 }}>Loading MFE...</div>;
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Header />
+
+      <Suspense fallback={<Loading />}>
+
+        {/* Keep mounted */}
+        <CartMFE />
+
+        {/* Keep mounted */}
+        <OrdersMFE />
+
+        <Routes>
+          <Route
+            path="/"
+            element={<ProductApp />}
+          />
+        </Routes>
+
+      </Suspense>
+    </BrowserRouter>
+  );
+}

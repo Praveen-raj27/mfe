@@ -7,11 +7,11 @@ export default defineConfig({
     react(),
 
     federation({
-      name: "products",
+      name: "orders",
       filename: "remoteEntry.js",
 
       exposes: {
-        "./ProductApp": "./src/ProductApp.jsx",
+        "./OrdersApp": "./src/OrdersApp.jsx",
       },
 
       shared: ["react", "react-dom"],
@@ -19,11 +19,11 @@ export default defineConfig({
   ],
 
   server: {
-    port: 5174,
+    port: 5177,
   },
 
   preview: {
-    port: 5174,
+    port: 5177,
   },
 
   build: {

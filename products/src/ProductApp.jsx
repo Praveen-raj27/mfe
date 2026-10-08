@@ -1,55 +1,70 @@
-// products/src/ProductApp.jsx
-
 import React from "react";
+import "./ProductApp.css";
 
 const products = [
   {
-    id: 101,
+    id: 1,
     name: "iPhone 17",
-    review: "Nice one",
+    price: 79999,
+    category: "Mobiles",
+    image: "https://picsum.photos/300/200?1",
   },
   {
-    id: 102,
-    name: "MacBook Air",
-    review: "Good one",
+    id: 2,
+    name: "MacBook Air M4",
+    price: 99999,
+    category: "Laptops",
+    image: "https://picsum.photos/300/200?2",
   },
   {
-    id: 103,
-    name: "AirPods Pro",
-    review: "Excellent one",
+    id: 3,
+    name: "Sony Headphones",
+    price: 24999,
+    category: "Audio",
+    image: "https://picsum.photos/300/200?3",
+  },
+  {
+    id: 4,
+    name: "Apple Watch",
+    price: 44999,
+    category: "Wearables",
+    image: "https://picsum.photos/300/200?4",
   },
 ];
 
-export default function ProductApp({ onProductSelect }) {
-  const selectProduct = (product) => {
-    window.dispatchEvent(
-      new CustomEvent("product:selected", {
-        detail: {
-          id: product.id,
-          name: product.name,
-          review: product.review,
-        },
-      })
-    );
-  };
+function addToCart(product) {
+  console.log(product,'Product')
+  window.dispatchEvent(
+    new CustomEvent("cart:add", {
+      detail: product,
+    })
+  );
+}
 
+export default function ProductApp() {
   return (
-    <div>
-      <h2>Products</h2>
+    <div className="products-container">
+      <h1>Products</h1>
 
-      {products.map((product) => (
-        <div key={product.id}>
-          <span>{product.name}</span>
+      <div className="product-grid">
+        {products.map((product) => (
+          <div className="product-card" key={product.id}>
+            <img src={product.image} alt={product.name} />
 
-          <button onClick={() => onProductSelect(product)}>
-            View Product
-          </button>
+            <h3>{product.name}</h3>
 
-          <button onClick={() => selectProduct(product)}>
-            View Reviews
-          </button>
-        </div>
-      ))}
+            <p>{product.category}</p>
+
+            <strong>
+              ₹{product.price.toLocaleString("en-IN")}
+            </strong>
+
+            <button onClick={() => addToCart(product)}>
+              Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

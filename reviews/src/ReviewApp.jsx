@@ -1,49 +1,39 @@
-// reviews/src/ReviewApp.jsx
-
 import React, { useEffect, useState } from "react";
 
-export default function ReviewApp({ product }) {
-  const [review, setReview] = useState("");
+export default function ReviewApp() {
+  const [product, setProduct] = useState(
+    window.selectedProduct || null
+  );
 
-   useEffect(() => {
-    setReview("");
-  }, [product?.id]);
+  // useEffect(() => {
+  //   const handleProductSelected = (event) => {
+  //     console.log("Selected product:", event.detail);
 
-  useEffect(() => {
-    const handleProductSelected = (event) => {
-      console.log("Product event received:", event.detail);
+  //     setProduct(event.detail);
+  //   };
 
-      setReview(event.detail.review);
-    };
+  //   window.addEventListener(
+  //     "product:selected",
+  //     handleProductSelected
+  //   );
 
-    window.addEventListener(
-      "product:selected",
-      handleProductSelected
-    );
-
-    return () => {
-      window.removeEventListener(
-        "product:selected",
-        handleProductSelected
-      );
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener(
+  //       "product:selected",
+  //       handleProductSelected
+  //     );
+  //   };
+  // }, []);
 
   if (!product) {
-    return <p>Select a product to see reviews.</p>;
+    return <p>Select a product to view reviews.</p>;
   }
 
   return (
     <div>
-      <h2>Reviews</h2>
+      <h2>{product.name} Reviews</h2>
 
-      <h3>{product.name}</h3>
-
-      <p>Product ID: {product.id}</p>
-
-      <p>Review:</p>
-
-      {review && <p>{review}</p>}
+      <p>{product.review}</p>
     </div>
   );
 }

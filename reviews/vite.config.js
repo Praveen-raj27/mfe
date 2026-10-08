@@ -14,7 +14,17 @@ export default defineConfig({
         "./ReviewApp": "./src/ReviewApp.jsx",
       },
 
-      shared: ["react", "react-dom"],
+        shared: {
+    react: {
+      singleton: true,
+    },
+    "react-dom": {
+      singleton: true,
+    },
+    "react-router-dom": {
+      singleton: true,
+    },
+  },
     }),
   ],
 

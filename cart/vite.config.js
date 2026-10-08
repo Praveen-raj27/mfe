@@ -7,11 +7,11 @@ export default defineConfig({
     react(),
 
     federation({
-      name: "products",
+      name: "cart",
       filename: "remoteEntry.js",
 
       exposes: {
-        "./ProductApp": "./src/ProductApp.jsx",
+        "./CartApp": "./src/CartApp.jsx",
       },
 
       shared: ["react", "react-dom"],
@@ -19,11 +19,11 @@ export default defineConfig({
   ],
 
   server: {
-    port: 5174,
+    port: 5176,
   },
 
   preview: {
-    port: 5174,
+    port: 5176,
   },
 
   build: {
